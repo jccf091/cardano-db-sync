@@ -48,6 +48,10 @@ in {
         type = lib.types.nullOr lib.types.path;
         default = null;
       };
+      stateDir = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = "/var/lib/cardano-node/db-${cfg.cluster}";
+      };
       package = lib.mkOption {
         type = lib.types.package;
         default = if cfg.extended then self.cardano-db-sync-extended else self.cardano-db-sync;
@@ -110,7 +114,8 @@ in {
         exec ${exec} \
           --config ${configFile} \
           --socket-path "$CARDANO_NODE_SOCKET_PATH" \
-          --schema-dir ${../../schema}
+          --schema-dir ${../../schema} \
+          --state-dir ${cfg.stateDir}
       '';
     };
     users = {
